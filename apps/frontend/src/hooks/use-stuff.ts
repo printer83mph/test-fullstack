@@ -1,24 +1,31 @@
-import axios from 'axios';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import fetcher from '../util/fetcher';
+import axios from 'axios';
 
 export default function useStuff() {
   const {
     data: stuff,
     isLoading,
     error,
-    mutate,
   } = useSWR<{ things: Record<string, string> }>('/api/stuff', fetcher);
+  const { mutate } = useSWRConfig();
 
   const addNewThing = async () => {
     const newData = { key: `hi: ${Date.now()}`, value: 'people' };
-    await axios.post<string>(
-      `${import.meta.env.VITE_BACKEND_URL}/api/stuff`,
-      newData,
+    const optimisticData = {
+      things: { ...stuff.things, [newData.key]: newData.value },
+    };
+    mutate(
+      '/api/stuff',
+      async () => {
+        await axios.post<string>(
+          `${import.meta.env.VITE_BACKEND_URL}/api/stuff`,
+          newData,
+        );
+        return optimisticData;
+      },
+      { optimisticData },
     );
-    mutate((oldStuff) => ({ ...oldStuff, ...newData }));
-    // eslint-disable-next-line no-alert
-    // alert(JSON.stringify(newData));
   };
 
   return { stuff, isLoading, error, addNewThing };
