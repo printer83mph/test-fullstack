@@ -1,0 +1,18 @@
+{
+  "name": "my-fullstack-app",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "format": "turbo format"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "dependencies": {
+    "turbo": "^1.11.2"
+  }
+}

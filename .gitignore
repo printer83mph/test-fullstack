@@ -1,0 +1,10 @@
+# node
+node_modules
+
+# config/build
+.env
+.turbo
+
+# editor
+.vscode/*
+!.vscode/extensions.json
