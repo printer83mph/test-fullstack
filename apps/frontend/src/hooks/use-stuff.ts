@@ -12,9 +12,11 @@ export default function useStuff() {
 
   const addNewThing = async () => {
     const newData = { key: `hi: ${Date.now()}`, value: 'people' };
+
     const optimisticData = {
       things: { ...stuff.things, [newData.key]: newData.value },
     };
+
     mutate(
       '/api/stuff',
       async () => {
@@ -22,9 +24,10 @@ export default function useStuff() {
           `${import.meta.env.VITE_BACKEND_URL}/api/stuff`,
           newData,
         );
-        return optimisticData;
+        return fetcher('/api/stuff');
       },
-      { optimisticData },
+      // set revalidate false since we already hit the route in our async fn call!
+      { optimisticData, revalidate: false },
     );
   };
 
