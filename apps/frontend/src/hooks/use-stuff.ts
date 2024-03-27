@@ -12,7 +12,10 @@ export default function useStuff() {
 
   const addNewThing = async () => {
     const newData = { key: `hi: ${Date.now()}`, value: 'people' };
-    await axios.post<string>('/api/stuff', newData);
+    await axios.post<string>(
+      `${import.meta.env.VITE_BACKEND_URL}/api/stuff`,
+      newData,
+    );
     mutate((oldStuff) => ({ ...oldStuff, ...newData }));
     // eslint-disable-next-line no-alert
     // alert(JSON.stringify(newData));
